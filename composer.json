@@ -12,20 +12,24 @@
   ],
   "homepage": "https://github.com/aymanMahgoub/chinchilla",
   "autoload": {
-    "psr-0": {
-      "Chinchilla": "lib"
+    "psr-4": {
+      "": "lib/"
     }
   },
   "autoload-dev": {
     "psr-4": {
-      "Chinchilla\\Test\\": "tests"
+      "Chinchilla\\tests\\": "tests"
     }
   },
   "require": {
     "php": "^5.3.3|^7.0",
-    "php-amqplib/php-amqplib": "^2.6"
+    "php-amqplib/php-amqplib": "^2.11"
   },
   "require-dev": {
-    "phpunit/phpunit": "^4.8"
+    "phpunit/phpunit": "^7"
+  },
+  "scripts": {
+    "test": "phpunit"
   }
+
 }
