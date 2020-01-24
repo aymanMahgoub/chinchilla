@@ -4,3 +4,5 @@ phpunit.xml
 .idea
 /.idea/
 config.php
+queues.json
+dubage.php
