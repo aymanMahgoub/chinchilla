@@ -2,7 +2,7 @@
 
 namespace chinchilla\tests;
 
-require __DIR__."/../config.php";
+include('config.php');
 
 use Chinchilla\Connection\Model\ConnectionOptions;
 use Chinchilla\Connection\Services\ConnectionFactory;
