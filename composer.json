@@ -1,0 +1,31 @@
+{
+  "name": "php-amqplib/chinchilla",
+  "license": "MIT",
+  "type": "library",
+  "description": "AMQP Tools",
+  "keywords": [
+    "library",
+    "AMQP",
+    "RabbitMQ",
+    "PHPAMQPLib",
+    "chinchilla"
+  ],
+  "homepage": "https://github.com/aymanMahgoub/chinchilla",
+  "autoload": {
+    "psr-0": {
+      "Chinchilla": "lib"
+    }
+  },
+  "autoload-dev": {
+    "psr-4": {
+      "Chinchilla\\Test\\": "tests"
+    }
+  },
+  "require": {
+    "php": "^5.3.3|^7.0",
+    "php-amqplib/php-amqplib": "^2.6"
+  },
+  "require-dev": {
+    "phpunit/phpunit": "^4.8"
+  }
+}
