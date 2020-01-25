@@ -30,7 +30,9 @@ class QueuePublisher implements ProducerInterface
     {
         $queues          = file_get_contents(AMQP_QUEUES);
         $this->queues    = json_decode($queues, true);
-        $this->producers = $this->queues["producers"];
+        if (!empty($this->queues)) {
+            $this->producers = $this->queues["producers"];
+        }
     }
 
     /**
@@ -51,7 +53,6 @@ class QueuePublisher implements ProducerInterface
         $channel->basic_publish($amqpMessage, '', $routingKey);
         $this->closeConnection($channel, $amqpConnection);
     }
-
 
     /**
      * @param AMQPChannel        $channel
@@ -86,13 +87,11 @@ class QueuePublisher implements ProducerInterface
      */
     private function getAmqpMessage(string $body, string $routingKey)
     {
-        $producers  = $this->queues["producers"];
-        $producer   = $producers[$routingKey];
+        $producer   = $this->producers[$routingKey];
         $properties = $producer["properties"];
 
         return new AMQPMessage($body, $properties);
     }
-
 
     /**
      * @param string $routingKey
@@ -108,6 +107,5 @@ class QueuePublisher implements ProducerInterface
 
         return false;
     }
-
 
 }
