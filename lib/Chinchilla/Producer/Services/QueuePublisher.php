@@ -15,7 +15,7 @@ use PhpAmqpLib\Message\AMQPMessage;
  *
  * @package Chinchilla\Producer\Services
  */
-class QueuePublisher implements ProducerInterface
+class QueuePublisher
 {
     /** @var array $queues */
     private $queues;
@@ -50,6 +50,7 @@ class QueuePublisher implements ProducerInterface
         $producer       = $this->producers[$routingKey];
         $amqpConnection = $this->getAmqpConnection($producer['connection']);
         $channel        = $amqpConnection->channel();
+        $channel->queue_declare($routingKey);
         $channel->basic_publish($amqpMessage, '', $routingKey);
         $this->closeConnection($channel, $amqpConnection);
     }

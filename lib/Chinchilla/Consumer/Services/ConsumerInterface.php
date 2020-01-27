@@ -36,6 +36,6 @@ interface ConsumerInterface
      *
      * @return int
      */
-    public static function consume(AMQPMessage $msg): int;
+    public function consume(AMQPMessage $msg): int;
 
 }
