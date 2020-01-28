@@ -21,7 +21,7 @@ class QueuePublisher
     private $queues;
 
     /** @var array $producers */
-    private $producers;
+    private $producers = [];
 
     /**
      * QueuePublisher constructor.
@@ -43,14 +43,14 @@ class QueuePublisher
      */
     public function publish(string $body, string $routingKey): void
     {
-        if (!$this->isValidRoutingKey($routingKey)) {
-            throw new InvalidArgumentException('Passing undefined routingKey: '.$routingKey);
+        if (!array_key_exists($routingKey, $this->producers)) {
+            throw new InvalidArgumentException('Passing undefined routing Key: '.$routingKey);
         }
         $amqpMessage    = $this->getAmqpMessage($body, $routingKey);
         $producer       = $this->producers[$routingKey];
         $amqpConnection = $this->getAmqpConnection($producer['connection']);
         $channel        = $amqpConnection->channel();
-        $channel->queue_declare($routingKey);
+        $channel->queue_declare($routingKey, false, true, false, false);
         $channel->basic_publish($amqpMessage, '', $routingKey);
         $this->closeConnection($channel, $amqpConnection);
     }
@@ -92,21 +92,6 @@ class QueuePublisher
         $properties = $producer["properties"];
 
         return new AMQPMessage($body, $properties);
-    }
-
-    /**
-     * @param string $routingKey
-     *
-     * @return bool
-     */
-    private function isValidRoutingKey(string $routingKey)
-    {
-        $producers = $this->queues['producers'];
-        if (array_key_exists($routingKey, $producers)) {
-            return true;
-        }
-
-        return false;
     }
 
 }
