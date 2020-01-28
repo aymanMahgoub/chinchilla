@@ -2,13 +2,11 @@
 
 namespace Chinchilla\Consumer\Services;
 
-use Chinchilla\Connection\Model\ConnectionOptions;
-use Chinchilla\Connection\Services\ConnectionFactory;
+use Chinchilla\Connection\Services\ChinchillaConnectionService;
 use ErrorException;
 use Exception;
 use InvalidArgumentException;
 use PhpAmqpLib\Channel\AMQPChannel;
-use PhpAmqpLib\Connection\AbstractConnection;
 use PhpAmqpLib\Message\AMQPMessage;
 use Prophecy\Exception\Doubler\ClassNotFoundException;
 
@@ -26,6 +24,7 @@ class ConsumeQueueMessageService
     /** @var array $consumers */
     private $consumers = [];
 
+    /** @var callable|null $callback */
     private $callback;
 
     /**
@@ -53,36 +52,11 @@ class ConsumeQueueMessageService
         }
         $consumer = $this->consumers[$queueName];
         $this->setConsumerCallBack($consumer['callback']);
-        $amqpConnection = $this->getAmqpConnection($consumer['connection']);
+        $amqpConnection = ChinchillaConnectionService::openAmqpConnection($consumer['connection']);
         $channel        = $amqpConnection->channel();
         $channel->queue_declare($queueName, false, true, false, false);
         $this->consume($channel, $queueName, $numberOfMessage);
-        $this->closeConnection($channel, $amqpConnection);
-    }
-
-    /**
-     * @param string $connectionType
-     *
-     * @return AbstractConnection
-     */
-    private function getAmqpConnection(string $connectionType)
-    {
-        $rabbitConnection = ConnectionFactory::getConnectionService($connectionType);
-        $connectionOption = new ConnectionOptions();
-
-        return $rabbitConnection->createConnection($connectionOption);
-    }
-
-    /**
-     * @param AMQPChannel        $channel
-     * @param AbstractConnection $abstractConnection
-     *
-     * @throws Exception
-     */
-    private function closeConnection(AMQPChannel $channel, AbstractConnection $abstractConnection)
-    {
-        $channel->close();
-        $abstractConnection->close();
+        ChinchillaConnectionService::closeAmqpConnection($channel, $amqpConnection);
     }
 
     /**
@@ -131,10 +105,21 @@ class ConsumeQueueMessageService
     /**
      * @param AMQPMessage $message
      */
-    public function processMessage(AMQPMessage $message)
+    private function processMessage(AMQPMessage $message)
     {
         $processFlag = call_user_func($this->callback, $message);
         $this->handleMessageDelivery($message, $processFlag);
+    }
+
+    /**
+     * @param $name
+     * @param $arguments
+     */
+    public function __call($name, $arguments)
+    {
+        if ($name == 'processMessage' and $this->callback !== null and $arguments[0] instanceof AMQPMessage) {
+            $this->processMessage($arguments[0]);
+        }
     }
 
     /**

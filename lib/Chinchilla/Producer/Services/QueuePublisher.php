@@ -2,12 +2,9 @@
 
 namespace Chinchilla\Producer\Services;
 
-use Chinchilla\Connection\Model\ConnectionOptions;
-use Chinchilla\Connection\Services\ConnectionFactory;
+use Chinchilla\Connection\Services\ChinchillaConnectionService;
 use Exception;
 use InvalidArgumentException;
-use PhpAmqpLib\Channel\AMQPChannel;
-use PhpAmqpLib\Connection\AbstractConnection;
 use PhpAmqpLib\Message\AMQPMessage;
 
 /**
@@ -48,36 +45,11 @@ class QueuePublisher
         }
         $amqpMessage    = $this->getAmqpMessage($body, $routingKey);
         $producer       = $this->producers[$routingKey];
-        $amqpConnection = $this->getAmqpConnection($producer['connection']);
+        $amqpConnection = ChinchillaConnectionService::openAmqpConnection($producer['connection']);
         $channel        = $amqpConnection->channel();
         $channel->queue_declare($routingKey, false, true, false, false);
         $channel->basic_publish($amqpMessage, '', $routingKey);
-        $this->closeConnection($channel, $amqpConnection);
-    }
-
-    /**
-     * @param AMQPChannel        $channel
-     * @param AbstractConnection $abstractConnection
-     *
-     * @throws Exception
-     */
-    private function closeConnection(AMQPChannel $channel, AbstractConnection $abstractConnection)
-    {
-        $channel->close();
-        $abstractConnection->close();
-    }
-
-    /**
-     * @param string $connectionType
-     *
-     * @return AbstractConnection
-     */
-    private function getAmqpConnection(string $connectionType)
-    {
-        $rabbitConnection = ConnectionFactory::getConnectionService($connectionType);
-        $connectionOption = new ConnectionOptions();
-
-        return $rabbitConnection->createConnection($connectionOption);
+        ChinchillaConnectionService::closeAmqpConnection($channel, $amqpConnection);
     }
 
     /**
