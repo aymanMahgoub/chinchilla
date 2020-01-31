@@ -2,7 +2,7 @@
   "name": "php-amqplib/chinchilla",
   "license": "MIT",
   "type": "library",
-  "description": "AMQP Tools",
+  "description": "Chinchilla is Php-amqplib library wrapper and AMQP tool",
   "keywords": [
     "library",
     "AMQP",
