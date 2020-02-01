@@ -1,5 +1,5 @@
 {
-  "name": "aymanMahgoub/chinchilla",
+  "name": "ayman-mahgoub/chinchilla",
   "license": "MIT",
   "type": "library",
   "description": "Chinchilla is Php-amqplib library wrapper and AMQP tool",
