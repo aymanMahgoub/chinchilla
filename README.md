@@ -6,7 +6,12 @@
 
 * We build **Chinchilla** to suitable native php apps that need messaging using Php-amqplib in easier way.
 
-### Installing
+## Installing
+
+* Via Composer
+```
+$ composer require ayman-mahgoub/chinchilla
+```
 
 ## Getting Started
 * First create config.php file in your project Directory you have to declare this constants

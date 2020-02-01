@@ -1,5 +1,11 @@
 {
   "name": "ayman-mahgoub/chinchilla",
+  "authors": [
+    {
+      "name": "Ayman Mahgoub",
+      "email": "ayman.mahgoub1@gmail.com"
+    }
+  ],
   "license": "MIT",
   "type": "library",
   "description": "Chinchilla is Php-amqplib library wrapper and AMQP tool",
