@@ -1,14 +1,14 @@
 {
-  "name": "php-amqplib/chinchilla",
+  "name": "aymanMahgoub/chinchilla",
   "license": "MIT",
   "type": "library",
   "description": "Chinchilla is Php-amqplib library wrapper and AMQP tool",
   "keywords": [
     "library",
+    "chinchilla",
     "AMQP",
     "RabbitMQ",
-    "PHPAMQPLib",
-    "chinchilla"
+    "PHPAMQPLib"
   ],
   "homepage": "https://github.com/aymanMahgoub/chinchilla",
   "autoload": {
